@@ -7,34 +7,12 @@
 
 import SwiftUI
 
-struct CircleView: View {
-    @State var label: String
-    @State private var searchText = ""
-    
-    
-    var body: some View {
-        ZStack {
-            Circle()
-                .fill(Color.blue)
-                .frame(width: 90.0, height: 80.0)
-            Text(label).foregroundColor(.white)
-        }
-    }
-}
 
-struct RectangleView: View {
-    @State var label: String
-    
-    var body: some View {
-        ZStack {
-            Rectangle()
-                .fill(Color.blue)
-                .frame(width: 300.0, height: 80.0)
-            Text(label).foregroundColor(.white)
-        }
-    }
-}
-let interests=["Academic","Governing","Honors", "Media", "Cultural", "PanHellenic", "Professional", "Religious", "Social", "Special Interest", "Sports"]
+
+//list of interest categories
+let interests=["Academic","Governing","Honors", "Media", "Cultural", "Panhellenic", "Professional", "Religious", "Social", "Interest", "Sports"]
+
+//will be replaced by API call
 let studentOrgs=[
                  "American College of Pharmaceutical Scientists, Student Chapter",
                  "Academy of Managed Care Pharmacy",
@@ -43,8 +21,8 @@ let studentOrgs=[
                 "CPHS Ambassadors",
                 "DATA Club",
                 "Drake Math Club",
-                "Drake Pharmacy United Group of Students (DRxUGS)",
-                "Drake University Occupational Therapy (DUSOTA)",
+                "Drake Pharmacy DRxUGS",
+                "Occupational Therapy (DUSOTA)",
                  "Drake Simulation League",
                 "Honors Program Student Council",
                 "Investment Club",
@@ -52,9 +30,24 @@ let studentOrgs=[
                 "Society of Physics Students",
                 "Student Leadership Advisory Panel",
                 "Women in STEM"]
+
+
 struct ContentView: View {
     var body: some View {
+        //vertical stack of app content
         VStack {
+            //title of the page
+            Text("DrakeOrgs")
+                .position(x: 200, y:15)
+                .font(
+                        .system(size: 34)
+                        .weight(.heavy)
+
+                    )
+            //button  prompt for interests
+            Text("What is your interest?")
+            
+            //Horizontal stack of interest filters
             Divider()
             ScrollView(.horizontal) {
                 HStack(spacing: 10) {
@@ -63,33 +56,67 @@ struct ContentView: View {
                     }
                 }.padding()
             }.frame(height: 100)
-            .position(x: 200, y: 90)
             Divider()
             Spacer()
-            
+        
+        //vertical stack of rectangle buttons for club list
         VStack{
             Divider()
             ScrollView() {
-                VStack(spacing: 10) {
+                VStack(spacing: 2) {
                     ForEach(0..<10) { index in
-                        RectangleView(label:(studentOrgs[index]))
+                        
+                        //navigate to new page with information about club
+                        NavigationLink(destination: DisplayTextView(text: studentOrgs[index])) {
+                            Text("")}
+                        
+                        RectangleView(label:studentOrgs[index])
                     }
                 }.padding()
-            }.frame(height: 600)
+            }.frame(height: 500)
             Divider()
             Spacer()
+        }
+        
+        //bottom tab bar
+        TabView {
+            Text("")
+                .tabItem {
+                Image(systemName: "doc.text.magnifyingglass")
+                Text("Explore")
+                  }
+            
+            NavigationView {
+                    ClubsView() // Directly navigate to ClubsView
+                }
+                .tabItem {
+                Image(systemName: "calendar")
+                Text("Clubs and Events")
+                  }
+            
+            Text("")
+                .tabItem {
+                Image(systemName: "square.and.pencil")
+                Text("Submit Information")
+                  }
             }
             
         }
-
     }
 }
 
 
 
 
+// Preview
+#if DEBUG
 struct ContentView_Previews: PreviewProvider {
     static var previews: some View {
         ContentView()
+.previewInterfaceOrientation(.portrait)
+
     }
 }
+#endif
+
+
